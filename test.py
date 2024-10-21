@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("넘버카운트")
 
 # 색상
-PINK = (252, 142, 172)  # #FC8EAC 색상
+PINK = (252, 142, 172)  # #FC8EAC 색상으로 바꿈
 BLACK = (0, 0, 0)
 
 # 폰트 설정
