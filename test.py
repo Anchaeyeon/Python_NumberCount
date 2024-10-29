@@ -18,10 +18,14 @@ BLACK = (0, 0, 0)
 font = pygame.font.Font(None, 50)
 
 # 가능한 숫자 목록 (각 라운드별)
-NUMBERS_ROUND1 = [1, 2, 3, 4, 6, 8] # Round 1 숫자들
-NUMBERS_ROUND2 = [8, 9, 11, 13, 14, 15, 16] # Round 2 숫자들
-NUMBERS_ROUND3 = [16, 17, 20, 21, 22, 25, 26, 28, 30, 32] # Round 3 숫자들
-NUMBERS_ROUND4 = [32, 33, 35, 37, 40, 43, 45, 49, 50, 55, 56, 58, 60, 61, 64] # Round 4 숫자들
+ROUND1 = [1, 2, 3, 4, 6, 8] # Round 1 숫자들
+ROUND2 = [8, 9, 11, 13, 14, 15, 16] # Round 2 숫자들
+ROUND3 = [16, 17, 20, 21, 22, 25, 26, 28, 30, 32] # Round 3 숫자들
+ROUND4 = [32, 33, 35, 37, 40, 43, 45, 50, 55, 56, 60, 61, 64] # Round 4 숫자들
+ROUND5 = [64, 70, 74, 78, 81, 90, 95, 100, 109, 115, 120, 124, 128] # Round 5 숫자들
+ROUND6 = [128, 135, 150, 163, 172, 181, 198, 204, 220, 221, 233, 246, 251, 256] # Round 6 숫자들
+ROUND7 = [256, 275, 289, 294, 301, 344, 365, 390, 417, 446, 485, 500, 510, 512] # Round 7 숫자들
+ROUND8 = [512, 534, 572, 588, 613, 650, 677, 718, 759, 821, 870, 901, 967, 1004, 1017, 1024] # Round 8 숫자들
 
 # 플레이어 클래스
 class Player:
@@ -72,7 +76,7 @@ player = Player()
 falling_numbers = []
 clock = pygame.time.Clock()
 speed = 8
-round_number = 1  # 현재 라운드
+round = 1  # 현재 라운드
 
 # 게임 루프
 while True:
@@ -90,23 +94,48 @@ while True:
 
     # 라운드 전환: 플레이어 숫자에 따라 라운드 변경
     if 1 <= player.number < 8:
-        round_number = 1
+        round = 1
     elif 8 <= player.number < 16:
-        round_number = 2
+        round = 2
+        speed = 10
     elif 16 <= player.number < 32:
-        round_number = 3
+        round = 3
+        speed = 12
     elif 32 <= player.number < 64:
-        round_number = 4
+        round = 4
+        speed = 15
+    elif 64 <= player.number < 128:
+        round = 5
+        speed = 18
+    elif 128 <= player.number < 256:
+        round = 6
+        speed = 21
+    elif 256 <= player.number < 512:
+        round = 7
+        speed = 25
+    elif 512 <= player.number < 1024:
+        round = 8
+        speed = 30
+
 
     # 라운드에 따라 적절한 숫자 리스트 선택
-    if round_number == 1:
-        number_list = NUMBERS_ROUND1
-    elif round_number == 2:
-        number_list = NUMBERS_ROUND2
-    elif round_number == 3:
-        number_list = NUMBERS_ROUND3
-    elif round_number == 4:
-        number_list = NUMBERS_ROUND4
+    if round == 1:
+        number_list = ROUND1
+    elif round == 2:
+        number_list = ROUND2
+    elif round == 3:
+        number_list = ROUND3
+    elif round == 4:
+        number_list = ROUND4
+    elif round == 5:
+        number_list = ROUND5
+    elif round == 6:
+        number_list = ROUND6
+    elif round == 7:
+        number_list = ROUND7
+    elif round == 8:
+        number_list = ROUND8
+
 
     # 숫자 생성 (일정 확률로)
     if random.randint(1, 50) == 1:
