@@ -17,6 +17,7 @@ BLACK = (0, 0, 0)
 # 폰트 설정
 font = pygame.font.Font(None, 50)
 
+# 숫자 배열
 ROUND1 = [1, 2, 3, 4, 6, 8] # Round 1 숫자들
 ROUND2 = [8, 9, 11, 13, 15, 16] # Round 2 숫자들
 ROUND3 = [16, 17, 20, 22, 25, 26, 28, 30, 32] # Round 3 숫자들
