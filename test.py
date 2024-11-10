@@ -11,11 +11,14 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("NumberCount")
 
 # 색상
-PINK = (252, 142, 172)  # #FC8EAC
+PINK = (252, 142, 172) #FC8EAC
 BLACK = (0, 0, 0)
 
 # 폰트 설정
 font = pygame.font.Font(None, 50)
+
+# 초기 점수
+score = 1
 
 # 숫자 배열
 ROUND1 = [1, 2, 3, 4, 6, 8] # Round 1 숫자들
@@ -44,12 +47,20 @@ class Player:
             self.rect.x += 10
 
     def update_num(self, value):
+        global score
         if value < self.number:
             self.number = 1  # 자신보다 작은 숫자 먹으면 1로 초기화
+            score = 1
         elif value > self.number:
+            score = value
             self.gameover()  # 자신보다 큰 숫자 먹으면 게임 종료
         else:
+            score += value
             self.number += value  # 같은 숫자일 때 더하기
+
+    def draw_score(self):
+        text_score = font.render("Score : " + str(score), True, PINK)
+        screen.blit(text_score, [430, 15])
 
     def gameover(self):
         print("Game Over")
@@ -110,19 +121,19 @@ while True:
         speed = 12
     elif 32 <= player.number < 64:
         round = 4
-        speed = 15
+        speed = 14
     elif 64 <= player.number < 128:
         round = 5
-        speed = 18
+        speed = 16
     elif 128 <= player.number < 256:
         round = 6
-        speed = 21
+        speed = 18
     elif 256 <= player.number < 512:
         round = 7
-        speed = 25
+        speed = 20
     elif 512 <= player.number < 1024:
         round = 8
-        speed = 30
+        speed = 22
 
     # 라운드에 따라 적절한 숫자 리스트 선택
     if round == 1:
@@ -144,7 +155,7 @@ while True:
 
 
     # 숫자 생성 (일정 확률로)
-    if random.randint(1, 50) == 1:
+    if random.randint(1, 20) == 1:
         falling_number.append(FallingNum(number_list))
 
     # 떨어지는 숫자 처리
@@ -163,6 +174,7 @@ while True:
 
     # 플레이어 그리기
     player.draw()
+    player.draw_score()
 
     # 화면 업데이트
     pygame.display.flip()
