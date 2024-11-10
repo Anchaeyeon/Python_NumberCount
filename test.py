@@ -52,8 +52,9 @@ class Player:
             self.number = 1  # 자신보다 작은 숫자 먹으면 1로 초기화
             score = 1
         elif value > self.number:
-            score = value
-            self.gameover()  # 자신보다 큰 숫자 먹으면 게임 종료
+            self.draw_text_centered("Game Over", pygame.Rect(0,0,100, 100))
+            pygame.display.flip()
+            self.GameOver()  # 자신보다 큰 숫자 먹으면 게임 종료
         else:
             score += value
             self.number += value  # 같은 숫자일 때 더하기
@@ -62,7 +63,7 @@ class Player:
         text_score = font.render("Score : " + str(score), True, PINK)
         screen.blit(text_score, [430, 15])
 
-    def gameover(self):
+    def GameOver(self):
         print("Game Over")
         pygame.quit()
         sys.exit()
@@ -138,20 +139,28 @@ while True:
     # 라운드에 따라 적절한 숫자 리스트 선택
     if round == 1:
         number_list = ROUND1
+        speed=8
     elif round == 2:
         number_list = ROUND2
+        speed = 10
     elif round == 3:
         number_list = ROUND3
+        speed = 12
     elif round == 4:
         number_list = ROUND4
+        speed = 14
     elif round == 5:
         number_list = ROUND5
+        speed = 16
     elif round == 6:
         number_list = ROUND6
+        speed = 18
     elif round == 7:
         number_list = ROUND7
+        speed = 20
     elif round == 8:
         number_list = ROUND8
+        speed = 22
 
 
     # 숫자 생성 (일정 확률로)
