@@ -52,8 +52,9 @@ class Player:
             self.number = 1  # 자신보다 작은 숫자 먹으면 1로 초기화
             score = 1
         elif value > self.number:
-            self.draw_text_centered("Game Over", pygame.Rect(0,0,100, 100))
+            self.draw_over()
             pygame.display.flip()
+            pygame.time.delay(2500)
             self.GameOver()  # 자신보다 큰 숫자 먹으면 게임 종료
         else:
             score += value
@@ -62,6 +63,10 @@ class Player:
     def draw_score(self):
         text_score = font.render("Score : " + str(score), True, PINK)
         screen.blit(text_score, [430, 15])
+
+    def draw_over(self):
+        text_over = font.render("Game Over", True, PINK)
+        screen.blit(text_over, [200, 350])
 
     def GameOver(self):
         print("Game Over")
@@ -161,7 +166,6 @@ while True:
     elif round == 8:
         number_list = ROUND8
         speed = 22
-
 
     # 숫자 생성 (일정 확률로)
     if random.randint(1, 20) == 1:
