@@ -21,14 +21,15 @@ font = pygame.font.Font(None, 50)
 score = 1
 
 # 숫자 배열
-ROUND1 = [1, 2, 3, 4, 6, 8] # Round 1 숫자들
-ROUND2 = [8, 9, 11, 13, 15, 16] # Round 2 숫자들
-ROUND3 = [16, 17, 20, 22, 25, 26, 28, 30, 32] # Round 3 숫자들
-ROUND4 = [32, 33, 35, 37, 40, 45, 50, 56, 60, 61, 64] # Round 4 숫자들
-ROUND5 = [64, 70, 78, 81, 90, 95, 100, 115, 120, 124, 128] # Round 5 숫자들
-ROUND6 = [128, 135, 150, 163, 172, 181, 198, 220, 233, 246, 251, 256] # Round 6 숫자들
-ROUND7 = [256, 275, 289, 301, 344, 365, 390, 417, 446, 485, 500, 512] # Round 7 숫자들
-ROUND8 = [512, 534, 572, 588, 613, 677, 718, 750, 821, 901, 967, 1004, 1024] # Round 8 숫자들
+ROUND1 = [1, 1, 1, 2, 2, 2, 3, 4, 4, 6, 7, 8, 8, 8] # Round1 숫자 (1, 2, 4)
+ROUND2 = [6, 7, 8, 8, 8, 9, 11, 13, 15, 16, 16] # Round2 숫자 (8)
+ROUND3 = [11, 13, 15, 16, 16, 16, 17, 20, 22, 25, 28, 30, 32, 32, 32] # Round3 숫자 (16)
+ROUND4 = [25, 28, 30, 32, 32, 32, 33, 37, 40, 45, 50, 56, 60, 64, 64] # Round4 숫자 (32)
+ROUND5 = [45, 50, 56, 60, 64, 64, 64, 70, 78, 81, 90, 95, 100, 121, 128, 128, 128] # Round5 숫자 (64)
+ROUND6 = [95, 100, 121, 128, 128, 150, 163, 172, 181, 220, 233, 246, 251, 256, 256, 256] # Round6 숫자 (128)
+ROUND7 = [233, 246, 251, 256, 256, 256, 275, 289, 301, 365, 390, 417, 485, 490, 512, 512] # Round7 숫자 (256)
+ROUND8 = [417, 485, 490, 512, 512, 512, 534, 588, 613, 677, 718, 821, 901, 1004, 1024, 1024, 1024] # Round8 숫자 (512)
+ROUND9 = [718, 821, 901, 1004, 1024, 1024, 1024, 1223, 1340, 1501, 1687, 1700, 2024, 2048, 2048] # Round9 숫자 (1024)
 
 # 플레이어 클래스
 class Player:
@@ -62,7 +63,7 @@ class Player:
 
     def draw_score(self):
         text_score = font.render("Score : " + str(score), True, PINK)
-        screen.blit(text_score, [430, 15])
+        screen.blit(text_score, [380, 30])
 
     def draw_over(self):
         text_over = font.render("Game Over", True, PINK)
@@ -81,8 +82,12 @@ class Player:
 # 떨어지는 숫자 클래스
 class FallingNum:
     def __init__(self, num_list):
-        self.value = random.choice(num_list)  # 지정된 수열에서 무작위 선택
-        self.rect = pygame.Rect(random.randint(0, WIDTH - 80), -80, 80, 80)
+        while True:
+            self.value = random.choice(num_list)  # 지정된 수열에서 무작위 선택
+            self.rect = pygame.Rect(random.randint(0, WIDTH - 80), -80, 80, 80)
+
+            if not any(self.rect.colliderect(existing) for existing in existing_rects):
+                break
 
     def fall(self, speed):
         self.rect.y += speed
@@ -140,6 +145,9 @@ while True:
     elif 512 <= player.number < 1024:
         round = 8
         speed = 22
+    elif 1024 <= player.number < 2024:
+        round = 9
+        speed = 24
 
     # 라운드에 따라 적절한 숫자 리스트 선택
     if round == 1:
@@ -166,9 +174,13 @@ while True:
     elif round == 8:
         number_list = ROUND8
         speed = 22
+    elif round == 9:
+        number_list = ROUND9
+        speed = 24
 
     # 숫자 생성 (일정 확률로)
-    if random.randint(1, 20) == 1:
+    if random.randint(1, 25) == 1:
+        existing_rects = [num.rect for num in falling_number]
         falling_number.append(FallingNum(number_list))
 
     # 떨어지는 숫자 처리
