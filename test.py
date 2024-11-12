@@ -63,20 +63,21 @@ class Player:
             pygame.time.delay(2500)
             self.GameOver()
         else:
-            score += value
             self.number += value  # 같은 숫자일 때 더하기
+            score += value
 
     def draw_score(self):
         text_score = font.render("Score : " + str(score), True, PINK)
         screen.blit(text_score, [380, 30])
 
     def draw_over(self):
-        text_over = font.render("Game Over", True, PINK)
-        screen.blit(text_over, [200, 350])
+        text_over = font.render("Game Over\nyour score : " + str(score), True, PINK)
+        screen.blit(text_over, [100, 350])
 
     def draw_clear(self):
         text_clear = font.render("Game Clear", True, PINK)
         screen.blit(text_clear, [200, 350])
+
     def GameOver(self):
         print("Game Over")
         pygame.quit()
@@ -153,7 +154,7 @@ while True:
     elif 512 <= player.number < 1024:
         round = 8
         speed = 22
-    elif 1024 <= player.number < 2024:
+    elif 1024 <= player.number < 2048:
         round = 9
         speed = 24
 
