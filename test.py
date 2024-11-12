@@ -57,6 +57,11 @@ class Player:
             pygame.display.flip()
             pygame.time.delay(2500)
             self.GameOver()  # 자신보다 큰 숫자 먹으면 게임 종료
+        elif score==2048:
+            self.draw_clear()
+            pygame.display.flip()
+            pygame.time.delay(2500)
+            self.GameOver()
         else:
             score += value
             self.number += value  # 같은 숫자일 때 더하기
@@ -69,6 +74,9 @@ class Player:
         text_over = font.render("Game Over", True, PINK)
         screen.blit(text_over, [200, 350])
 
+    def draw_clear(self):
+        text_clear = font.render("Game Clear", True, PINK)
+        screen.blit(text_clear, [200, 350])
     def GameOver(self):
         print("Game Over")
         pygame.quit()
