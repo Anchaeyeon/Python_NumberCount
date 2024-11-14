@@ -14,10 +14,8 @@ pygame.display.set_caption("NumberCount")
 PINK = (252, 142, 172) #FC8EAC
 BLACK = (0, 0, 0)
 
-# 기본 폰트
+# 폰트
 font = pygame.font.Font(None, 50)
-
-# 크기가 큰 폰트
 big_font = pygame.font.Font(None, 80)
 
 # 처음 점수
@@ -58,12 +56,12 @@ class Player:
         elif value > self.number:
             self.draw_over()
             pygame.display.flip()
-            pygame.time.delay(2500)
+            pygame.time.delay(1500)
             self.GameOver()  # 자신보다 큰 숫자 먹으면 게임 종료
         elif score==2048:
             self.draw_clear()
             pygame.display.flip()
-            pygame.time.delay(2500)
+            pygame.time.delay(1500)
             self.GameOver()
         else:
             self.number += value  # 같은 숫자일 때 더하기
@@ -76,14 +74,12 @@ class Player:
     def draw_over(self):
         text_over = big_font.render("Game Over", True, PINK)
         screen.blit(text_over, [150, 350])
-
         text_yourscore = font.render("Your Score : " + str(score), True, PINK)
         screen.blit(text_yourscore, [195, 410])
 
     def draw_clear(self):
         text_clear = big_font.render("Game Clear", True, PINK)
         screen.blit(text_clear, [150, 350])
-
         text_yourscore = font.render("Clear Score : " + str(score), True, PINK)
         screen.blit(text_yourscore, [190, 410])
 
@@ -99,9 +95,9 @@ class Player:
 
 # 떨어지는 숫자 클래스
 class FallingNum:
-    def __init__(self, num_list):
+    def __init__(self, number_list):
         while True:
-            self.value = random.choice(num_list)  # 지정된 수열에서 무작위 선택
+            self.value = random.choice(number_list)  # 랜덤으로 선택
             self.rect = pygame.Rect(random.randint(0, WIDTH - 80), -80, 80, 80)
 
             if not any(self.rect.colliderect(existing) for existing in existing_rects):
@@ -119,13 +115,42 @@ class FallingNum:
         text_rect = text_surface.get_rect(center=rect.center)
         screen.blit(text_surface, text_rect)
 
-# 게임 설정
+# 게임 시작을 할 수 있도록 버튼 추가
+def game_start():
+    title = big_font.render("NumberCount", True, PINK)
+    title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(title, title_rect)
+
+    start_button = pygame.Rect(WIDTH // 4, HEIGHT // 2, WIDTH // 2, 80)
+    pygame.draw.rect(screen, PINK, start_button, border_radius=10)
+    start_text = font.render("Game Start", True, BLACK)
+    start_text_rect = start_text.get_rect(center=start_button.center)
+    screen.blit(start_text, start_text_rect)
+
+    pygame.display.flip()
+
+    # 게임 시작 버튼 클릭
+    click = True
+    while click:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if start_button.collidepoint(mouse_pos):
+                    click = False  # 게임 시작
+
+# 게임 시작 화면 표시
+game_start()
+
+# 게임 화면 설정
 player = Player()
 falling_number = []
 clock = pygame.time.Clock()
 speed = 8
 
-# 게임 루프
 while True:
     screen.fill(BLACK)
 
@@ -196,22 +221,22 @@ while True:
         number_list = ROUND9
         speed = 24
 
-    # 숫자 생성 (일정 확률로)
+    # 숫자 생성
     if random.randint(1, 25) == 1:
         existing_rects = [num.rect for num in falling_number]
         falling_number.append(FallingNum(number_list))
 
-    # 떨어지는 숫자 처리
+    # 떨어지는 숫자
     for number in falling_number[:]:
         number.fall(speed)
         number.draw()
 
-        # 충돌 체크 및 숫자 합산 (같은 숫자끼리만 합산 가능)
+        # 충돌 체크 및 숫자 더하기 (같은 숫자끼리만 더하기 가능)
         if number.rect.colliderect(player.rect):
             player.update_num(number.value)
             falling_number.remove(number)
 
-        # 화면 밖으로 나가면 제거
+        # 화면 밖으로 나가면 없애기
         elif number.rect.top > HEIGHT:
             falling_number.remove(number)
 
