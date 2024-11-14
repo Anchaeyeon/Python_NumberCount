@@ -14,10 +14,13 @@ pygame.display.set_caption("NumberCount")
 PINK = (252, 142, 172) #FC8EAC
 BLACK = (0, 0, 0)
 
-# 폰트 설정
+# 기본 폰트
 font = pygame.font.Font(None, 50)
 
-# 초기 점수
+# 크기가 큰 폰트
+big_font = pygame.font.Font(None, 80)
+
+# 처음 점수
 score = 1
 
 # 숫자 배열
@@ -71,12 +74,18 @@ class Player:
         screen.blit(text_score, [380, 30])
 
     def draw_over(self):
-        text_over = font.render("Game Over\nyour score : " + str(score), True, PINK)
-        screen.blit(text_over, [100, 350])
+        text_over = big_font.render("Game Over", True, PINK)
+        screen.blit(text_over, [150, 350])
+
+        text_yourscore = font.render("Your Score : " + str(score), True, PINK)
+        screen.blit(text_yourscore, [195, 410])
 
     def draw_clear(self):
-        text_clear = font.render("Game Clear", True, PINK)
-        screen.blit(text_clear, [200, 350])
+        text_clear = big_font.render("Game Clear", True, PINK)
+        screen.blit(text_clear, [150, 350])
+
+        text_yourscore = font.render("Clear Score : " + str(score), True, PINK)
+        screen.blit(text_yourscore, [190, 410])
 
     def GameOver(self):
         print("Game Over")
