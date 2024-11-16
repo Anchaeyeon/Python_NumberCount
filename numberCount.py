@@ -44,8 +44,8 @@ class Player:
 
     def user_text(self, text, rect):
         text_surface = font.render(text, True, BLACK)
-        rect = text_surface.get_rect(center=rect.center)
-        screen.blit(text_surface, rect)
+        text_rect = text_surface.get_rect(center=rect.center)
+        screen.blit(text_surface, text_rect)
 
     def move(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
@@ -112,14 +112,14 @@ class FallingNum:
 
     def fall_numTxt(self, text, rect): # 떨어지는 숫자 글씨
         fall_text = font.render(text, True, BLACK)
-        rect = fall_text.get_rect(center=rect.center)
-        screen.blit(fall_text, rect)
+        fall_rect = fall_text.get_rect(center=rect.center)
+        screen.blit(fall_text, fall_rect)
 
 # 게임 시작을 할 수 있도록 버튼 추가
 def game_start():
     title = big_font.render("NumberCount", True, PINK)
-    rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
-    screen.blit(title, rect)
+    title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(title, title_rect)
 
     startbtn = pygame.Rect(WIDTH // 4, HEIGHT // 2, WIDTH // 2, 80)
     pygame.draw.rect(screen, PINK, startbtn, border_radius=10)
@@ -193,7 +193,7 @@ while True:
         round = 9
         speed = 24
 
-    # 라운드에 따라 적절한 숫자 리스트 선택
+    # 라운드에 따라 숫자 리스트 선택
     if round == 1:
         number_list = ROUND1
         speed = 8
