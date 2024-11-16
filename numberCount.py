@@ -21,7 +21,7 @@ big_font = pygame.font.Font(None, 80)
 # 처음 점수
 score = 1
 
-# 숫자 배열
+# 라운드별 숫자 배열
 ROUND1 = [1, 1, 1, 2, 2, 2, 3, 4, 4, 6, 7, 8, 8, 8] # Round1 숫자 (1, 2, 4)
 ROUND2 = [6, 7, 8, 8, 8, 9, 11, 13, 15, 16, 16] # Round2 숫자 (8)
 ROUND3 = [11, 13, 15, 16, 16, 16, 17, 20, 22, 25, 28, 30, 32, 32, 32] # Round3 숫자 (16)
@@ -40,7 +40,12 @@ class Player:
 
     def draw(self):
         pygame.draw.rect(screen, PINK, self.rect, border_radius=10)
-        self.draw_text_centered(str(self.number), self.rect)
+        self.user_text(str(self.number), self.rect)
+
+    def user_text(self, text, rect):
+        text_surface = font.render(text, True, BLACK)
+        rect = text_surface.get_rect(center=rect.center)
+        screen.blit(text_surface, rect)
 
     def move(self, keys):
         if keys[pygame.K_LEFT] and self.rect.left > 0:
@@ -59,39 +64,34 @@ class Player:
             pygame.time.delay(1500)
             self.GameOver()  # 자신보다 큰 숫자 먹으면 게임 종료
         elif score==2048:
-            self.draw_clear()
+            self.draw_clear() # 점수가 2048이 되면 점수 클리어
             pygame.display.flip()
             pygame.time.delay(1500)
-            self.GameOver()
-        else:
-            self.number += value  # 같은 숫자일 때 더하기
+            self.GameOver() # 게임 종료
+        else:   # 같은 숫자일 때는 더하기
+            self.number += value
             score += value
 
-    def draw_score(self):
+    def draw_score(self): # 현재 점수 표시
         text_score = font.render("Score : " + str(score), True, PINK)
         screen.blit(text_score, [380, 30])
 
     def draw_over(self):
         text_over = big_font.render("Game Over", True, PINK)
         screen.blit(text_over, [150, 350])
-        text_yourscore = font.render("Your Score : " + str(score), True, PINK)
-        screen.blit(text_yourscore, [195, 410])
+        yourScore = font.render("Your Score : " + str(score), True, PINK)
+        screen.blit(yourScore, [195, 410])
 
     def draw_clear(self):
         text_clear = big_font.render("Game Clear", True, PINK)
         screen.blit(text_clear, [150, 350])
-        text_yourscore = font.render("Clear Score : " + str(score), True, PINK)
-        screen.blit(text_yourscore, [190, 410])
+        clearScore = font.render("Clear Score : " + str(score), True, PINK)
+        screen.blit(clearScore, [190, 410])
 
     def GameOver(self):
         print("Game Over")
         pygame.quit()
         sys.exit()
-
-    def draw_text_centered(self, text, rect):
-        text_surface = font.render(text, True, BLACK)
-        text_rect = text_surface.get_rect(center=rect.center)
-        screen.blit(text_surface, text_rect)
 
 # 떨어지는 숫자 클래스
 class FallingNum:
@@ -100,7 +100,7 @@ class FallingNum:
             self.value = random.choice(number_list)  # 랜덤으로 선택
             self.rect = pygame.Rect(random.randint(0, WIDTH - 80), -80, 80, 80)
 
-            if not any(self.rect.colliderect(existing) for existing in existing_rects):
+            if not any(self.rect.colliderect(existing) for existing in existing_rects): #떨어지는 숫자 위치가 겹쳐서 내려오지 않도록
                 break
 
     def fall(self, speed):
@@ -108,9 +108,9 @@ class FallingNum:
 
     def draw(self):
         pygame.draw.rect(screen, PINK, self.rect, border_radius=10)
-        self.draw_text_centered(str(self.value), self.rect)
+        self.fall_numTxt(str(self.value), self.rect)
 
-    def draw_text_centered(self, text, rect):
+    def fall_numTxt(self, text, rect): # 떨어지는 숫자 글씨
         text_surface = font.render(text, True, BLACK)
         text_rect = text_surface.get_rect(center=rect.center)
         screen.blit(text_surface, text_rect)
@@ -118,14 +118,14 @@ class FallingNum:
 # 게임 시작을 할 수 있도록 버튼 추가
 def game_start():
     title = big_font.render("NumberCount", True, PINK)
-    title_rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
-    screen.blit(title, title_rect)
+    rect = title.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    screen.blit(title, rect)
 
-    start_button = pygame.Rect(WIDTH // 4, HEIGHT // 2, WIDTH // 2, 80)
-    pygame.draw.rect(screen, PINK, start_button, border_radius=10)
+    startbtn = pygame.Rect(WIDTH // 4, HEIGHT // 2, WIDTH // 2, 80)
+    pygame.draw.rect(screen, PINK, startbtn, border_radius=10)
     start_text = font.render("Game Start", True, BLACK)
-    start_text_rect = start_text.get_rect(center=start_button.center)
-    screen.blit(start_text, start_text_rect)
+    rect = start_text.get_rect(center=startbtn.center)
+    screen.blit(start_text, rect)
 
     pygame.display.flip()
 
@@ -139,7 +139,7 @@ def game_start():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                if start_button.collidepoint(mouse_pos):
+                if startbtn.collidepoint(mouse_pos):
                     click = False  # 게임 시작
 
 # 게임 시작 화면 표시
@@ -160,13 +160,14 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # 키 입력 받아서 플레이어 이동
+    # 키를 눌러서 이동
     keys = pygame.key.get_pressed()
     player.move(keys)
 
     # 라운드 전환: 플레이어 숫자에 따라 라운드 변경
     if 1 <= player.number < 8:
         round = 1
+        speed = 8
     elif 8 <= player.number < 16:
         round = 2
         speed = 10
@@ -195,7 +196,7 @@ while True:
     # 라운드에 따라 적절한 숫자 리스트 선택
     if round == 1:
         number_list = ROUND1
-        speed=8
+        speed = 8
     elif round == 2:
         number_list = ROUND2
         speed = 10
@@ -231,7 +232,7 @@ while True:
         number.fall(speed)
         number.draw()
 
-        # 충돌 체크 및 숫자 더하기 (같은 숫자끼리만 더하기 가능)
+        # 충돌 체크 & 숫자 더하기 (같은 숫자끼리만 더하기 가능)
         if number.rect.colliderect(player.rect):
             player.update_num(number.value)
             falling_number.remove(number)
