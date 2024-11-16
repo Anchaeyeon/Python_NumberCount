@@ -111,9 +111,9 @@ class FallingNum:
         self.fall_numTxt(str(self.value), self.rect)
 
     def fall_numTxt(self, text, rect): # 떨어지는 숫자 글씨
-        text_surface = font.render(text, True, BLACK)
-        text_rect = text_surface.get_rect(center=rect.center)
-        screen.blit(text_surface, text_rect)
+        fall_text = font.render(text, True, BLACK)
+        rect = fall_text.get_rect(center=rect.center)
+        screen.blit(fall_text, rect)
 
 # 게임 시작을 할 수 있도록 버튼 추가
 def game_start():
